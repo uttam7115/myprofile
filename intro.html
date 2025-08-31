@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Het • Aurora Flow Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#05060a;
+      --card: rgba(255,255,255,0.04);
+      --glass: rgba(255,255,255,0.06);
+      --text:#eaf6ff;
+      --muted:#9fb0c8;
+      --accent1:#7c3aed; /* purple */
+      --accent2:#00d4ff; /* cyan */
+      --accent3:#7bff94; /* mint */
+      --radius:14px;
+      --shadow: 0 12px 40px rgba(2,6,23,0.6);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* Animated aurora background */
+    .aurora{
+      position:fixed;inset:0;z-index:-3;overflow:hidden;
+      background: radial-gradient(1200px 600px at -10% 30%, rgba(124,58,237,0.18), transparent 15%),
+                  radial-gradient(900px 500px at 120% 10%, rgba(0,212,255,0.14), transparent 15%),
+                  radial-gradient(700px 400px at 10% 90%, rgba(123,255,148,0.09), transparent 10%),
+                  linear-gradient(180deg,#020316 0%, #051026 50%, #071024 100%);
+      animation: auroraShift 18s linear infinite;
+      filter: blur(30px) saturate(120%);
+    }
+    @keyframes auroraShift{
+      0%{transform:translateY(0) translateX(0) scale(1)}
+      50%{transform:translateY(-6%) translateX(3%) scale(1.03)}
+      100%{transform:translateY(0) translateX(0) scale(1)}
+    }
+
+    /* subtle moving gradient waves using pseudo element */
+    .wave-layer{position:fixed;inset:0;z-index:-2;pointer-events:none;}
+    .wave-layer::before,
+    .wave-layer::after{
+      content:'';position:absolute;left:-10%;right:-10%;height:60vh;border-radius:50%;opacity:0.22;
+      background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));
+      filter:blur(60px);
+    }
+    .wave-layer::before{top:10%;transform:scaleX(1.6);animation:waveMove 12s linear infinite}
+    .wave-layer::after{bottom:-10%;transform:scaleX(1.2);animation:waveMove 16s linear infinite reverse}
+    @keyframes waveMove{0%{transform:translateX(-5%) scaleX(1.6)}50%{transform:translateX(5%) scaleX(1.6)}100%{transform:translateX(-5%) scaleX(1.6)}}
+
+    /* faint star / particle layer */
+    .particles{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);background-size: 40px 40px;opacity:0.35;mix-blend-mode:screen}
+
+    .container{max-width:1100px;margin:0 auto;padding:1.25rem}
+
+    /* NAVBAR */
+    header{position:sticky;top:16px;padding:0 1.25rem;pointer-events:auto}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:.6rem;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);backdrop-filter:blur(8px);border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:var(--shadow)}
+    .brand{display:flex;align-items:center;gap:.6rem}
+    .logo{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:inline-grid;place-items:center;font-weight:700;color:#041027}
+    .brand h1{font-size:1.1rem;margin:0}
+    .links{display:flex;gap:.8rem;align-items:center}
+    .links a{color:var(--muted);text-decoration:none;padding:.5rem .8rem;border-radius:8px;font-weight:600}
+    .links a:hover{color:var(--text);background:linear-gradient(90deg,rgba(124,58,237,0.12),rgba(0,212,255,0.12))}
+    .cta-btn{background:linear-gradient(90deg,var(--accent2),var(--accent3));color:#021223;padding:.5rem .75rem;border-radius:10px;font-weight:700;border:none}
+
+    /* HERO */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:2rem;align-items:center;padding:5rem 0}
+    .intro h2{font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;margin:0 0 .6rem;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;color:transparent}
+    .intro p{color:var(--muted);max-width:60ch;margin:0 0 1rem}
+    .hero-ctas{display:flex;gap:.8rem;flex-wrap:wrap}
+
+    /* hero card */
+    .hero-card{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:1rem;border-radius:12px;box-shadow:0 10px 30px rgba(3,6,17,0.6)}
+    .avatar{width:100%;height:380px;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+
+    /* SECTIONS */
+    section{padding:2.6rem 0}
+    .section-title{font-size:1.4rem;margin:0 0 1rem;color:var(--text);font-weight:700}
+
+    /* ABOUT */
+    .about-grid{display:grid;grid-template-columns:1fr 320px;gap:1rem}
+    .card{background:var(--card);border-radius:var(--radius);padding:1.1rem;border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow)}
+    .muted{color:var(--muted)}
+
+    /* SKILLS */
+    .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .meter{height:12px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden}
+    .meter .bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));transition:width 1.6s ease}
+
+    /* PROJECTS */
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+    .project{padding:1rem;border-radius:12px;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+    .project h3{margin:.2rem 0;color:var(--text)}
+    .project p{color:var(--muted)}
+    .project .actions{margin-top:.8rem;display:flex;gap:.6rem}
+
+    /* MODAL */
+    .modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(2,6,23,.6),rgba(2,6,23,.8));backdrop-filter:blur(6px);z-index:60;padding:1rem}
+    .modal{width:min(920px,96vw);border-radius:12px;overflow:hidden}
+    .modal .content{padding:1.25rem;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+    .modal header{display:flex;justify-content:space-between;align-items:center;padding:1rem;border-bottom:1px solid rgba(255,255,255,0.02)}
+    .close{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:.4rem .65rem;border-radius:8px;color:var(--muted);cursor:pointer}
+
+    /* CONTACT */
+    form{display:grid;gap:.8rem}
+    input,textarea{padding:.85rem;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);outline:none}
+    button{border:none;padding:.8rem 1rem;border-radius:10px;background:linear-gradient(90deg,var(--accent2),var(--accent1));color:#031324;font-weight:700;cursor:pointer}
+
+    /* FOOTER */
+    footer{padding:2rem 0;color:var(--muted);text-align:center}
+
+    /* reveal animations */
+    [data-reveal]{opacity:0;transform:translateY(24px);transition:all .75s cubic-bezier(.2,.9,.2,1)}
+    [data-reveal].show{opacity:1;transform:none}
+
+    /* responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .about-grid{grid-template-columns:1fr}
+      .avatar{height:260px}
+      .avatar.small{height:180px}
+    }
+
+  </style>
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="wave-layer" aria-hidden="true"></div>
+  <div class="particles" aria-hidden="true"></div>
+
+  <header class="container" role="banner">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">H</div>
+        <div>
+          <h1>Het</h1>
+          <div class="muted" style="font-size:12px">BCA • Web & Data</div>
+        </div>
+      </div>
+      <div class="links" role="menubar">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+        <a class="cta-btn" href="#contact">Hire / Collab</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container" role="main">
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div>
+        <p class="muted">Frontend • Data Visualizations • Creative UI</p>
+        <div class="intro" data-reveal>
+          <h2>Designing modern interfaces with a flowing aurora.</h2>
+          <p class="muted">I build responsive web experiences with clean code, thoughtful interactions, and attractive visuals. Below are projects and skills I’m working on.</p>
+          <div class="hero-ctas">
+            <a class="btn primary" href="#projects">See Projects</a>
+            <a class="btn ghost" href="#contact">Get in touch</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="hero-card card">
+          <img class="avatar" src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=1200&auto=format&fit=crop" alt="Het profile"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" data-reveal>
+      <h3 class="section-title">About Me</h3>
+      <div class="card">
+        <p class="muted">I’m Het, a BCA student focusing on frontend development, Python scripting, and R for data visualizations. I enjoy combining beautiful visuals with clear user experiences. I learn by building and iterating — small projects, prototypes, and dashboards.</p>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" data-reveal>
+      <h3 class="section-title">Skills</h3>
+      <div class="skills-grid">
+        <div class="card">
+          <h4>HTML & CSS</h4>
+          <p class="muted">Semantic markup, responsive layouts, animations</p>
+          <div class="meter"><div class="bar" data-fill="92%"></div></div>
+        </div>
+        <div class="card">
+          <h4>JavaScript</h4>
+          <p class="muted">DOM, fetch, lightweight interactivity</p>
+          <div class="meter"><div class="bar" data-fill="78%"></div></div>
+        </div>
+        <div class="card">
+          <h4>Python</h4>
+          <p class="muted">Scripting, data processing</p>
+          <div class="meter"><div class="bar" data-fill="74%"></div></div>
+        </div>
+        <div class="card">
+          <h4>R (Data Viz)</h4>
+          <p class="muted">Charts, dashboards, storytelling</p>
+          <div class="meter"><div class="bar" data-fill="70%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" data-reveal>
+      <h3 class="section-title">Projects</h3>
+      <div class="projects-grid">
+        <article class="project card">
+          <h3>Typing Speed Test</h3>
+          <p class="muted">A desktop & web app that measures typing speed, accuracy, and mistakes highlighting.</p>
+          <div class="actions">
+            <button class="btn primary" data-modal="typing">Details</button>
+            <a class="btn ghost" href="#">Demo</a>
+          </div>
+        </article>
+
+        <article class="project card">
+          <h3>Hotel Booking UI</h3>
+          <p class="muted">Front-end prototype showcasing room catalog, filters, and booking flow.</p>
+          <div class="actions">
+            <button class="btn primary" data-modal="hotel">Details</button>
+            <a class="btn ghost" href="#">Demo</a>
+          </div>
+        </article>
+
+        <article class="project card">
+          <h3>BI Dashboard (R)</h3>
+          <p class="muted">Story-driven dashboards with KPIs, comparisons, and clean color palettes.</p>
+          <div class="actions">
+            <button class="btn primary" data-modal="dash">Details</button>
+            <a class="btn ghost" href="#">Demo</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" data-reveal>
+      <h3 class="section-title">Contact</h3>
+      <div class="card">
+        <form onsubmit="event.preventDefault(); alert('This is a demo form — connect it to Formspree or your backend.');">
+          <input aria-label="Your name" type="text" placeholder="Your name" required>
+          <input aria-label="Your email" type="email" placeholder="your@email.com" required>
+          <textarea aria-label="Your message" placeholder="Message" required></textarea>
+          <button type="submit">Send message</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="card" style="display:flex;justify-content:center;align-items:center;gap:.6rem">© <span id="year"></span> Het • Crafted with Aurora Flow</div>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-hidden="true">
+    <div class="modal card" role="document">
+      <header>
+        <h4 id="modalTitle">Project</h4>
+        <button class="close" id="modalClose">Close</button>
+      </header>
+      <div class="content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    // set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // reveal on scroll
+    const reveals = document.querySelectorAll('[data-reveal]');
+    const rIO = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('show'); e.target.querySelectorAll('.card .bar') && null; rIO.unobserve(e.target); }
+      });
+    },{threshold:0.18});
+    reveals.forEach(r=>rIO.observe(r));
+
+    // animate skill meters
+    const meters = document.querySelectorAll('.meter .bar');
+    const meterObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const bar = entry.target.querySelector('.bar');
+          if(bar && bar.dataset.fill){ bar.style.width = bar.dataset.fill; }
+          meterObserver.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.3});
+    document.querySelectorAll('.meter').forEach(m=>meterObserver.observe(m.parentElement));
+
+    // modal data
+    const modalData = {
+      typing: {title:'Typing Speed Test', html:`<p>A typing speed tester with WPM, accuracy and mistake highlights. Built with Python and a lightweight web UI.</p>`},
+      hotel: {title:'Hotel Booking UI', html:`<p>Frontend prototype for browsing rooms and booking with filters and responsive layout.</p>`},
+      dash: {title:'BI Dashboard (R)', html:`<p>Dashboards and charts focused on storytelling and clarity.</p>`}
+    };
+
+    // modal open/close
+    const backdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    document.querySelectorAll('[data-modal]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const key = btn.dataset.modal;
+        const d = modalData[key];
+        if(!d) return;
+        modalTitle.textContent = d.title;
+        modalContent.innerHTML = d.html;
+        backdrop.style.display = 'flex';
+        backdrop.setAttribute('aria-hidden','false');
+      });
+    });
+    document.getElementById('modalClose').addEventListener('click',closeModal);
+    backdrop.addEventListener('click',(e)=>{ if(e.target===backdrop) closeModal(); });
+    function closeModal(){ backdrop.style.display='none'; backdrop.setAttribute('aria-hidden','true'); }
+
+    // simple accessibility: close modal with Esc
+    document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal(); });
+
+    // animate aurora subtly on mousemove (parallax) - lightweight
+    const aurora = document.querySelector('.aurora');
+    let lastX=0,lastY=0;
+    window.addEventListener('mousemove', (ev)=>{
+      const x = (ev.clientX/window.innerWidth - 0.5)*8; const y = (ev.clientY/window.innerHeight - 0.5)*6;
+      aurora.style.transform = `translate(${x}px, ${y}px)`;
+    });
+  </script>
+</body>
+</html>
